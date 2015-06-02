@@ -45,9 +45,14 @@ namespace HeatMarginExtension
             _userControl.DataContext = _viewModel;
             
             var buffer = _textView.TextBuffer;
-            
-            
+
+            _textView.LayoutChanged += _textView_LayoutChanged;
             buffer.Changed += buffer_Changed;
+        }
+
+        void _textView_LayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
+        {
+            _viewModel.RefreshLines();
         }
 
         void buffer_Changed(object sender, TextContentChangedEventArgs e)

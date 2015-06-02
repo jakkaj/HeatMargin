@@ -39,8 +39,6 @@ namespace HeatMarginExtension.View
         {
             var lineNumber = _textView.TextViewLines.IndexOf(line);
 
-            lineNumber += 2;
-
             LineTest = lineNumber.ToString();
 
             if (_lines.Contains(lineNumber))
@@ -50,10 +48,10 @@ namespace HeatMarginExtension.View
 
             _lines.Insert(0, lineNumber);
 
-            _refreshLines();
+            RefreshLines();
         }
 
-        void _refreshLines()
+        public void RefreshLines()
         {
             var snapShot = _textView.TextSnapshot;
 
