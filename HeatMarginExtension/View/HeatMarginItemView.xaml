@@ -15,8 +15,8 @@
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="9" MinWidth="9" />
     </Grid.ColumnDefinitions>
-    <Border Width="9" Height="250" Background="Green">
-        <TextBlock Text="{Binding Age}" Foreground="White"/>
+    <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding ColorBrush}">
+        
     </Border>
   </Grid>
 </UserControl>

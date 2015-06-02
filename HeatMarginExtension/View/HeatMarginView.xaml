@@ -40,8 +40,8 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <Border Width="9" Height="200" Background="Red">
+        <!--<Border Width="9" Height="200" Background="Red">
             <TextBlock Text="{Binding LineTest}" Foreground="White"></TextBlock>
-        </Border>
+        </Border>-->
     </Grid>
 </UserControl>
