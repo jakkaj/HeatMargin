@@ -30,9 +30,16 @@ namespace HeatMarginExtension.View
             _viewModels = new ObservableCollection<HeatMarginItemViewModel>();
         }
 
+        bool _isScrollBar()
+        {
+            return _scrollBar != null;
+        }
+
         public void LineUpdated(ITextViewLine line)
         {
             var lineNumber = _textView.TextViewLines.IndexOf(line);
+
+            lineNumber += 2;
 
             LineTest = lineNumber.ToString();
 
@@ -52,7 +59,7 @@ namespace HeatMarginExtension.View
 
             foreach (var line in _lines)
             {
-                if (snapShot.LineCount < line)
+                if (snapShot.LineCount < line || line < 0)
                     continue;
                 _doViewModel(line, snapShot);
             }
@@ -80,9 +87,9 @@ namespace HeatMarginExtension.View
 
             vm.Age = _getAge(line);
 
-            if (_scrollBar == null)
+            if (!_isScrollBar())
             {
-                _updateViewModelDocument(vm, line);
+                _updateViewModelDocument(vm, line, snapShot);
             }
             else
             {
@@ -104,56 +111,60 @@ namespace HeatMarginExtension.View
             vm.Height = Math.Round(_scrollBar.GetYCoordinateOfScrollMapPosition(mapBottom)) - vm.Top + 2.0;
         }
 
-        void _updateViewModelDocument(HeatMarginItemViewModel vm, int lineNumber)
+        void _updateViewModelDocument(HeatMarginItemViewModel vm, int lineNumber, ITextSnapshot snapshot)
         {
-            //{
-            //    double startTop;
-            //    switch (line.VisibilityState)
-            //    {
-            //        case VisibilityState.FullyVisible:
-            //        case VisibilityState.Hidden:
-            //        case VisibilityState.PartiallyVisible:
-            //            startTop = line.Top - _textView.ViewportTop;
-            //            break;
+            var snapLine = snapshot.GetLineFromLineNumber(lineNumber);
+            var line = _textView.GetTextViewLineContainingBufferPosition(snapLine.Start);
+            var lineEnd = _textView.GetTextViewLineContainingBufferPosition(snapLine.End);
+            
+            double startTop = 0;
 
-            //        case VisibilityState.Unattached:
-            //            // if the closest line was past the end we would have already returned
-            //            startTop = 0;
-            //            break;
+            var visible = true;
 
-            //        default:
-            //            // shouldn't be reachable, but definitely hide if this is the case
-            //            return false;
-            //    }
+            switch (line.VisibilityState)
+            {
+                case VisibilityState.FullyVisible:
+                case VisibilityState.Hidden:
+                case VisibilityState.PartiallyVisible:
+                    startTop = line.Top - _textView.ViewportTop;
+                    break;
 
-            //    double stopBottom;
+                case VisibilityState.Unattached:
+                    // if the closest line was past the end we would have already returned
+                    startTop = 0;
+                    break;
 
-            //    switch (line.VisibilityState)
-            //    {
-            //        case VisibilityState.FullyVisible:
-            //        case VisibilityState.Hidden:
-            //        case VisibilityState.PartiallyVisible:
-            //            stopBottom = line.Bottom - _textView.ViewportTop;
-            //            break;
+                default:
+                    // shouldn't be reachable, but definitely hide if this is the case
+                    visible = false;
+                    break;
+            }
 
-            //        case VisibilityState.Unattached:
-            //            // if the closest line was before the start we would have already returned
-            //            stopBottom = _textView.ViewportHeight;
-            //            break;
+            double stopBottom = 0;
 
-            //        default:
-            //            // shouldn't be reachable, but definitely hide if this is the case
-            //            return false;
-            //    }
+            switch (lineEnd.VisibilityState)
+            {
+                case VisibilityState.FullyVisible:
+                case VisibilityState.Hidden:
+                case VisibilityState.PartiallyVisible:
+                    stopBottom = lineEnd.Bottom - _textView.ViewportTop;
+                    break;
 
-            //    diffViewModel.Top = startTop;
-            //    diffViewModel.Height = stopBottom - startTop;
-            //    return true;
-            //}    
+                case VisibilityState.Unattached:
+                    // if the closest line was before the start we would have already returned
+                    stopBottom = _textView.ViewportHeight;
+                    break;
+
+                default:
+                    // shouldn't be reachable, but definitely hide if this is the case
+                    visible = false;
+                    break;
+            }
+
+            vm.Top = startTop;
+            vm.Height = stopBottom - startTop;
+            vm.Visible = visible;
         }
-
-
-
 
         public string LineTest
         {
