@@ -1,54 +1,56 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using HeatMargin.View;
+using HeatMarginExtension.View;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 
-namespace HeatMargin
+
+namespace HeatMarginExtension
 {
     /// <summary>
     /// A class detailing the margin's visual definition including both size and content.
     /// </summary>
-    class HeatMargin : Canvas, IWpfTextViewMargin
+    class HeatMarginExtension : Canvas, IWpfTextViewMargin
     {
         public const string MarginName = "HeatMargin";
         private IWpfTextView _textView;
         private bool _isDisposed = false;
 
-       
+
 
         private HeatMarginViewModel _viewModel;
         private UserControl _userControl;
 
         /// <summary>
-        /// Creates a <see cref="HeatMargin"/> for a given <see cref="IWpfTextView"/>.
+        /// Creates a <see cref="HeatMarginExtension"/> for a given <see cref="IWpfTextView"/>.
         /// </summary>
         /// <param name="textView">The <see cref="IWpfTextView"/> to attach the margin to.</param>
         /// <param name="buffer"></param>
-        public HeatMargin(IWpfTextView textView, IWpfTextViewMargin margin)
+        public HeatMarginExtension(IWpfTextView textView, IWpfTextViewMargin margin)
         {
             _textView = textView;
-            
+
             _viewModel = new HeatMarginViewModel();
             _userControl = new HeatMarginView();
             _userControl.DataContext = _viewModel;
 
             var buffer = _textView.TextBuffer;
 
-            buffer.Changing+=buffer_Changing;
+            buffer.Changing += buffer_Changing;
         }
 
         void buffer_Changing(object sender, TextContentChangingEventArgs e)
         {
             var line = _textView.Caret.ContainingTextViewLine;
 
-           // var lineTransform = _textView.LineTransformSource.GetLineTransform(line, 0, ViewRelativePosition.Top);
-            
-           
+            // var lineTransform = _textView.LineTransformSource.GetLineTransform(line, 0, ViewRelativePosition.Top);
+
+
         }
 
-       
+
 
         private void ThrowIfDisposed()
         {
@@ -59,7 +61,7 @@ namespace HeatMargin
         #region IWpfTextViewMargin Members
 
         /// <summary>
-        /// The <see cref="Sytem.Windows.FrameworkElement"/> that implements the visual representation
+        /// The <see cref="FrameworkElement"/> that implements the visual representation
         /// of the margin.
         /// </summary>
         public FrameworkElement VisualElement
