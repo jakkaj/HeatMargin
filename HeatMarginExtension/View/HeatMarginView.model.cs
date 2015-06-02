@@ -18,7 +18,7 @@ namespace HeatMarginExtension.View
         private readonly IVerticalScrollBar _scrollBar;
         private string _lineTest;
 
-        private List<int> _lines;
+        private List<LineWrapper> _lines;
 
         private ObservableCollection<HeatMarginItemViewModel> _viewModels;
 
@@ -26,7 +26,7 @@ namespace HeatMarginExtension.View
         {
             _textView = textView;
             _scrollBar = scrollBar;
-            _lines = new List<int>();
+            _lines = new List<LineWrapper>();
             _viewModels = new ObservableCollection<HeatMarginItemViewModel>();
         }
 
@@ -38,46 +38,84 @@ namespace HeatMarginExtension.View
         public void LineUpdated(ITextViewLine line)
         {
             var lineNumber = _textView.TextViewLines.IndexOf(line);
-
-            LineTest = lineNumber.ToString();
-
-            if (_lines.Contains(lineNumber))
+            
+            var lineWrapper = new LineWrapper
             {
-                _lines.Remove(lineNumber);
-            }
+                Line = line,
+                LineNumber = lineNumber
+            };
 
-            _lines.Insert(0, lineNumber);
+            _cleanUp(lineWrapper);
+
+            _lines.Insert(0, lineWrapper);
 
             RefreshLines();
+        }
+
+        void _cleanUp(LineWrapper wrapper)
+        {
+            var existing = _lines.FirstOrDefault(_ => _.LineNumber == wrapper.LineNumber);
+            if (existing != null)
+            {
+                var vm = _viewModels.FirstOrDefault(_ => _.LineNumber == existing.LineNumber);
+                _viewModels.Remove(vm);
+                _lines.Remove(existing);
+            }
         }
 
         public void RefreshLines()
         {
             var snapShot = _textView.TextSnapshot;
+            
+            List<LineWrapper> toRemove = new List<LineWrapper>();
 
             foreach (var line in _lines)
             {
-                if (snapShot.LineCount < line || line < 0)
+                var lineNumber = line.LineNumber;
+
+                if (snapShot.LineCount <= lineNumber || lineNumber < 0)
+                {
+                    toRemove.Add(line);
                     continue;
-                _doViewModel(line, snapShot);
+                }
+
+                var currentLine = snapShot.GetLineFromLineNumber(lineNumber);
+                var textLine = _textView.GetTextViewLineContainingBufferPosition(currentLine.Start);
+
+                var actualNumber = _textView.TextViewLines.IndexOf(textLine);
+
+                line.Line = textLine;
+
+                if (snapShot.LineCount <= actualNumber || actualNumber < 0)
+                {
+                    toRemove.Add(line);
+                    continue;
+                }
+
+                _doViewModel(line);
+            }
+
+            foreach (var item in toRemove)
+            {
+                _cleanUp(item);
             }
         }
 
-        double _getAge(int lineNumber)
+        double _getAge(LineWrapper line)
         {
-            var percent = Convert.ToDouble(_lines.IndexOf(lineNumber)) / Convert.ToDouble(_lines.Count);
+            var percent = Convert.ToDouble(_lines.IndexOf(line)) / Convert.ToDouble(_lines.Count);
             return percent;
         }
 
-        void _doViewModel(int line, ITextSnapshot snapShot)
+        void _doViewModel(LineWrapper line)
         {
-            var vm = _viewModels.FirstOrDefault(_ => _.LineNumber == line);
+            var vm = _viewModels.FirstOrDefault(_ => _.LineNumber == line.LineNumber);
 
             if (vm == null)
             {
                 vm = new HeatMarginItemViewModel
                 {
-                    LineNumber = line
+                    LineNumber = line.LineNumber
                 };
 
                 _viewModels.Add(vm);
@@ -87,17 +125,17 @@ namespace HeatMarginExtension.View
 
             if (!_isScrollBar())
             {
-                _updateViewModelDocument(vm, line, snapShot);
+                _updateViewModelDocument(vm, line.Line);
             }
             else
             {
-                _updateViewModelScroller(vm, line, snapShot);
+                _updateViewModelScroller(vm, line.Line);
             }
         }
 
-        void _updateViewModelScroller(HeatMarginItemViewModel vm, int lineNumber, ITextSnapshot snapshot)
+        void _updateViewModelScroller(HeatMarginItemViewModel vm, ITextViewLine line)
         {
-            var line = snapshot.GetLineFromLineNumber(lineNumber);
+            
 
             if (line == null) return;
 
@@ -109,12 +147,11 @@ namespace HeatMarginExtension.View
             vm.Height = Math.Round(_scrollBar.GetYCoordinateOfScrollMapPosition(mapBottom)) - vm.Top + 2.0;
         }
 
-        void _updateViewModelDocument(HeatMarginItemViewModel vm, int lineNumber, ITextSnapshot snapshot)
+        void _updateViewModelDocument(HeatMarginItemViewModel vm, ITextViewLine line)
         {
-            var snapLine = snapshot.GetLineFromLineNumber(lineNumber);
-            var line = _textView.GetTextViewLineContainingBufferPosition(snapLine.Start);
-            var lineEnd = _textView.GetTextViewLineContainingBufferPosition(snapLine.End);
-            
+            var lineStart = _textView.GetTextViewLineContainingBufferPosition(line.Start);
+            var lineEnd = _textView.GetTextViewLineContainingBufferPosition(line.End);
+
             double startTop = 0;
 
             var visible = true;
@@ -124,7 +161,7 @@ namespace HeatMarginExtension.View
                 case VisibilityState.FullyVisible:
                 case VisibilityState.Hidden:
                 case VisibilityState.PartiallyVisible:
-                    startTop = line.Top - _textView.ViewportTop;
+                    startTop = lineStart.Top - _textView.ViewportTop;
                     break;
 
                 case VisibilityState.Unattached:
@@ -183,5 +220,11 @@ namespace HeatMarginExtension.View
                 OnPropertyChanged();
             }
         }
+    }
+
+    public class LineWrapper
+    {
+        public int LineNumber { get; set; }
+        public ITextViewLine Line { get; set; }
     }
 }
