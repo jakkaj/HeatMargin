@@ -15,6 +15,7 @@ namespace HeatMarginExtension
     class HeatMarginExtension : Canvas, IWpfTextViewMargin
     {
         public const string MarginName = "HeatMargin";
+        public const string MarginScrollerName = "HeatMarginScroller";
         private IWpfTextView _textView;
         private bool _isDisposed = false;
 
@@ -22,6 +23,8 @@ namespace HeatMarginExtension
 
         private HeatMarginViewModel _viewModel;
         private UserControl _userControl;
+
+        private IVerticalScrollBar _scrollBar;
 
         /// <summary>
         /// Creates a <see cref="HeatMarginExtension"/> for a given <see cref="IWpfTextView"/>.
@@ -32,25 +35,32 @@ namespace HeatMarginExtension
         {
             _textView = textView;
 
-            _viewModel = new HeatMarginViewModel();
+            var scrollBarMargin = margin.GetTextViewMargin(PredefinedMarginNames.VerticalScrollBar);
+            // ReSharper disable once SuspiciousTypeConversion.Global
+            
+            _scrollBar = (IVerticalScrollBar)scrollBarMargin;
+
+            _viewModel = new HeatMarginViewModel(textView, _scrollBar);
             _userControl = new HeatMarginView();
             _userControl.DataContext = _viewModel;
-
+            
             var buffer = _textView.TextBuffer;
-
-            buffer.Changing += buffer_Changing;
+            
+            
+            buffer.Changed += buffer_Changed;
         }
 
-        void buffer_Changing(object sender, TextContentChangingEventArgs e)
+        void buffer_Changed(object sender, TextContentChangedEventArgs e)
         {
-            var line = _textView.Caret.ContainingTextViewLine;
+            var snapShot = _textView.TextSnapshot;
 
-            // var lineTransform = _textView.LineTransformSource.GetLineTransform(line, 0, ViewRelativePosition.Top);
-
-
+            foreach (var item in e.Changes)
+            {
+                var line = snapShot.GetLineFromPosition(item.NewPosition);
+                var actualLine = _textView.GetTextViewLineContainingBufferPosition(line.Start);
+                _viewModel.LineUpdated(actualLine);
+            }
         }
-
-
 
         private void ThrowIfDisposed()
         {

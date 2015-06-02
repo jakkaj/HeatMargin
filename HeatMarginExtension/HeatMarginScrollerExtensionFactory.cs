@@ -9,14 +9,17 @@ namespace HeatMarginExtension
     /// Export a <see cref="IWpfTextViewMarginProvider"/>, which returns an instance of the margin for the editor
     /// to use.
     /// </summary>
+
     [Export(typeof(IWpfTextViewMarginProvider))]
-    [Name(HeatMarginExtension.MarginName)]
-    [Order(After = PredefinedMarginNames.Spacer, Before = PredefinedMarginNames.Outlining)]
-    [MarginContainer(PredefinedMarginNames.LeftSelection)]
+    [Name(HeatMarginExtension.MarginScrollerName + "2013")]
     [ContentType("text")]
     [TextViewRole(PredefinedTextViewRoles.Editable)]
-
-    internal sealed class MarginFactory : IWpfTextViewMarginProvider
+    [MarginContainer(PredefinedMarginNames.VerticalScrollBar)]
+    [Order(After = "OverviewChangeTrackingMargin")]
+    [Order(Before = "OverviewErrorMargin")]
+    [Order(Before = "OverviewMarkMargin")]
+    [Order(Before = "OverviewSourceImageMargin")]
+    internal sealed class MarginScrollerFactory : IWpfTextViewMarginProvider
     {
         public IWpfTextViewMargin CreateMargin(IWpfTextViewHost textViewHost, IWpfTextViewMargin containerMargin)
         {

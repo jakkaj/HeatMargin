@@ -3,20 +3,45 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             
-             
+             xmlns:view="clr-namespace:HeatMarginExtension.View"
+
+
              ClipToBounds="True"
            
              d:DesignHeight="300"
              d:DesignWidth="9"
              mc:Ignorable="d">
-  <UserControl.Resources>
-  
+    <UserControl.Resources>
+
     </UserControl.Resources>
-  <Grid>
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="9" MinWidth="9" />
-    </Grid.ColumnDefinitions>
-    <Border Width="9" Height="250" Background="Red"></Border>
-  </Grid>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="9" MinWidth="9" />
+        </Grid.ColumnDefinitions>
+        <ItemsControl Grid.Column="0"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  ItemsSource="{Binding ViewModels, Mode=OneWay}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="ContentPresenter">
+                    <Setter Property="VerticalAlignment" Value="Top" />
+                    <Setter Property="Canvas.Top" Value="{Binding Top, Mode=OneWay}" />
+                    <Setter Property="Height" Value="{Binding Height, Mode=OneWay}" />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <view:HeatMarginItemView/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Border Width="9" Height="200" Background="Red">
+            <TextBlock Text="{Binding LineTest}" Foreground="White"></TextBlock>
+        </Border>
+    </Grid>
 </UserControl>
