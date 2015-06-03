@@ -88,7 +88,7 @@ namespace HeatMarginExtension.View
             {
                 if (wrapper.CurrentLineNumber == existingItem.CurrentLineNumber && !object.ReferenceEquals(wrapper, existingItem))
                 {
-                    if (_lines.IndexOf(wrapper) < _lines.IndexOf(existingItem))
+                    if (_lines.IndexOf(wrapper) > _lines.IndexOf(existingItem))
                     {
                         returnValue = false;
                     }
@@ -105,7 +105,7 @@ namespace HeatMarginExtension.View
 
         bool _syncCurrentLine(LineWrapper wrapper, ITextSnapshot snapshot)
         {
-            if (wrapper.CurrentLineNumber > snapshot.LineCount)
+            if (wrapper.CurrentLineNumber >= snapshot.LineCount)
             {
                 return false;
             }
@@ -121,6 +121,8 @@ namespace HeatMarginExtension.View
             wrapper.Line = actualLine;
 
             wrapper.CurrentLineNumber = lineSnapShot.LineNumber;
+
+            return true;
         }
 
         public void RefreshLines()
