@@ -49,13 +49,12 @@ namespace HeatMarginExtension.View
             
             var lineWrapper = new LineWrapper
             {
-                Line = line,
+                Line = snapshotLine,
                 ViewModel= new HeatMarginItemViewModel
                 {
                     Visible = true
                 },
-                CurrentLineNumber = lineNumber,
-                
+                CurrentLineNumber = lineNumber
             };
             
             _viewModels.Add(lineWrapper.ViewModel);
@@ -71,7 +70,7 @@ namespace HeatMarginExtension.View
             {
                 _viewModels.Remove(wrapper.ViewModel);
             }
-
+            
             wrapper.ViewModel = null;
             
             if (_lines.Contains(wrapper))
@@ -109,16 +108,10 @@ namespace HeatMarginExtension.View
             {
                 return false;
             }
-            var lineSnapShot = snapshot.GetLineFromLineNumber(wrapper.CurrentLineNumber);
 
-            var actualLine = _textView.GetTextViewLineContainingBufferPosition(lineSnapShot.Start);
-            
-            if (actualLine == null)
-            {
-                Debugger.Break();
-            }
+            var lineSnapShot = snapshot.GetLineFromLineNumber(wrapper.Line.LineNumber);
 
-            wrapper.Line = actualLine;
+            wrapper.Line = lineSnapShot;
 
             wrapper.CurrentLineNumber = lineSnapShot.LineNumber;
 
@@ -176,23 +169,37 @@ namespace HeatMarginExtension.View
 
         double _getAge(LineWrapper line)
         {
-            var percent = Convert.ToDouble(_lines.IndexOf(line)) / Convert.ToDouble(_lines.Count);
-            return percent;
+            var idx = _lines.IndexOf(line);
+
+            if (idx < 20)
+            {
+                var percent = Convert.ToDouble(_lines.IndexOf(line)) / Convert.ToDouble(_lines.Count);
+                return percent; 
+            }
+
+            return 1;
         }
 
         void _doViewModel(LineWrapper line)
         {
             var vm = line.ViewModel;
 
+            var actualLine = _textView.GetTextViewLineContainingBufferPosition(line.Line.Start);
+
+            if (actualLine == null)
+            {
+                Debugger.Break();
+            }
+
             vm.Age = _getAge(line);
 
             if (!_isScrollBar())
             {
-                _updateViewModelDocument(vm, line.Line, line.CurrentLineNumber);
+                _updateViewModelDocument(vm, actualLine, line.CurrentLineNumber);
             }
             else
             {
-                _updateViewModelScroller(vm, line.Line);
+                _updateViewModelScroller(vm, actualLine);
             }
         }
 
@@ -312,7 +319,7 @@ namespace HeatMarginExtension.View
 
     public class LineWrapper
     {
-        public ITextViewLine Line { get; set; }
+        public ITextSnapshotLine Line { get; set; }
         public HeatMarginItemViewModel ViewModel { get; set; }
         public int CurrentLineNumber { get; set; }
     }

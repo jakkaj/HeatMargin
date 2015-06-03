@@ -13,7 +13,7 @@
   
   <Grid>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="9" MinWidth="9" />
+      <ColumnDefinition Width="5" MinWidth="5" />
     </Grid.ColumnDefinitions>
     <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding ColorBrush}">
         
