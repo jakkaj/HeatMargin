@@ -2,6 +2,8 @@
 
 Heat Margin shows you where you've been editing your code!
 
+Download it here: https://visualstudiogallery.msdn.microsoft.com/66a4194a-4271-493f-8d87-91052d7db09d
+
 Visual studio has a feature built in to that shows you where you've edited your file (green for saved, yellow for unsaved). But over time, your entire documetn will show the green bar!
 
 With heat Margin as you edit lines, indicators are added in the scroll bar and next to the line numbers (much like the default green and yellow makers you're used to).
