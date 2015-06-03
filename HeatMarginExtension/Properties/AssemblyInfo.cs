@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("HeatMarginExtension")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Xamling PTY LTD")]
 [assembly: AssemblyProduct("HeatMarginExtension")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
