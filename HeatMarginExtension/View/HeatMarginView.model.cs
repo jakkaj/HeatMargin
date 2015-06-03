@@ -42,15 +42,37 @@ namespace HeatMarginExtension.View
                 return;
             }
 
+            
+
             //move all items after this position back or forward depending on direction
             var snapshot = _textView.TextSnapshot;
+
+            var editedLine = snapshot.GetLineFromPosition(position);
+            var editedLineNumber = editedLine.LineNumber;
+
+            var toRemove = new List<LineWrapper>();
 
             var changes = false;
             foreach (var line in _lines)
             {
+                if (newLines < 0)
+                {
+                    var currentLineNumber = line.Line.LineNumber;
+                    var range = editedLineNumber + -newLines;
+
+                    if (currentLineNumber >= editedLineNumber && currentLineNumber < range)
+                    {
+                        toRemove.Add(line);
+                        changes = true;
+                        continue;
+                    }
+                }
+
                 var pos = line.Line.Start.Position;
                 if (pos > position)
                 {
+                    
+
                     var newLineNumber = line.Line.LineNumber + newLines;
                     var snapshotLine = snapshot.GetLineFromLineNumber(newLineNumber);
 
@@ -59,6 +81,12 @@ namespace HeatMarginExtension.View
                     changes = true;
                 }
             }
+
+            foreach (var item in toRemove)
+            {
+                DisposeItem(item);
+            }
+
             if (changes)
             {
                 RefreshLines();
