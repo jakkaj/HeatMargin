@@ -26,27 +26,27 @@ namespace HeatMarginExtension.View
         {
             _colors = new List<string>
             {
-                "#CC00FF",
-                "#CC0AFF",
-                "#CC14FF",
-                "#CC1FFF",
-                "#CC29FF",
-                "#CC33FF",
-                "#CC3DFF",
-                "#CC47FF",
-                "#CC52FF",
-                "#CC5CFF",
-                "#CC66FF",
-                "#CC70FF",
-                "#CC7AFF",
-                "#CC85FF",
-                "#CC8FFF",
-                "#CC99FF",
-                "#CCA3FF",
-                "#CCADFF",
-                "#CCB8FF",
-                "#CCC2FF",
-                "#CCCCFF"
+                "#CC00CC",
+                "#CF0ACF",
+                "#D114D1",
+                "#D41FD4",
+                "#D629D6",
+                "#D933D9",
+                "#DB3DDB",
+                "#DE47DE",
+                "#E052E0",
+                "#E35CE3",
+                "#E666E6",
+                "#E870E8",
+                "#EB7AEB",
+                "#ED85ED",
+                "#F08FF0",
+                "#F299F2",
+                "#F5A3F5",
+                "#F7ADF7",
+                "#FAB8FA",
+                "#FCC2FC",
+                "#FFCCFF"
             };
         }
 
