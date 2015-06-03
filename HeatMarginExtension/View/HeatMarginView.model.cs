@@ -35,6 +35,36 @@ namespace HeatMarginExtension.View
             return _scrollBar != null;
         }
 
+        public void LineDelta(int position, int newLines)
+        {
+            if (newLines == 0)
+            {
+                return;
+            }
+
+            //move all items after this position back or forward depending on direction
+            var snapshot = _textView.TextSnapshot;
+
+            var changes = false;
+            foreach (var line in _lines)
+            {
+                var pos = line.Line.Start.Position;
+                if (pos > position)
+                {
+                    var newLineNumber = line.Line.LineNumber + newLines;
+                    var snapshotLine = snapshot.GetLineFromLineNumber(newLineNumber);
+
+                    line.CurrentLineNumber = newLineNumber;
+                    line.Line = snapshotLine;
+                    changes = true;
+                }
+            }
+            if (changes)
+            {
+                RefreshLines();
+            }
+        }
+
         public void LineRemoved(ITextViewLine line)
         {
             if (!_textView.TextViewLines.Contains(line))
@@ -92,6 +122,11 @@ namespace HeatMarginExtension.View
             _viewModels.Add(lineWrapper.ViewModel);
             
             _lines.Insert(0, lineWrapper);
+            
+            while (_lines.Count > 50)
+            {
+                DisposeItem(_lines.LastOrDefault());
+            }
 
             RefreshLines();
         }
