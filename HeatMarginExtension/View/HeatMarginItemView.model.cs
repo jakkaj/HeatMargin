@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 using HeatMarginExtension.Infrastructure;
 using Microsoft.VisualStudio.Text.Editor;
@@ -16,7 +17,6 @@ namespace HeatMarginExtension.View
         private double _top;
         private double _height;
         private bool _visible;
-        private int _lineNumber;
 
         private List<string> _colors;
 
@@ -101,17 +101,13 @@ namespace HeatMarginExtension.View
             {
                 _visible = value;
                 OnPropertyChanged();
+                OnPropertyChanged("IsVisible");
             }
         }
 
-        public int LineNumber
+        public Visibility IsVisible
         {
-            get { return _lineNumber; }
-            set
-            {
-                _lineNumber = value;
-                OnPropertyChanged();
-            }
+            get { return Visible ? Visibility.Visible : Visibility.Collapsed; }
         }
 
         public SolidColorBrush ColorBrush

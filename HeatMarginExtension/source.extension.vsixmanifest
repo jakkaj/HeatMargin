@@ -2,9 +2,9 @@
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
     <Identity Id="HeatMarginExtension..f88f1c8b-62b9-4243-b61d-337d2023ae2c" Version="1.0" Language="en-US" Publisher="Xamling + Jordan Knight" />
-    <DisplayName>HeatMarginExtension</DisplayName>
+    <DisplayName>Heat Margin</DisplayName>
     <Description xml:space="preserve">Shows a heat map of where you've been editing your file</Description>
-    <MoreInfo>http://www.xamling.net/</MoreInfo>
+    <MoreInfo>https://github.com/jakkaj/HeatMargin</MoreInfo>
     <License>LICENSE.txt</License>
     <Icon>favicon.ico</Icon>
   </Metadata>
