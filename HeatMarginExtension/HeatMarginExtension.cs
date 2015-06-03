@@ -129,6 +129,7 @@ namespace HeatMarginExtension
         {
             if (!_isDisposed)
             {
+                _viewModel.Dispose();
                 GC.SuppressFinalize(this);
                 _isDisposed = true;
             }
