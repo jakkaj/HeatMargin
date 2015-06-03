@@ -35,8 +35,40 @@ namespace HeatMarginExtension.View
             return _scrollBar != null;
         }
 
+        public void LineRemoved(ITextViewLine line)
+        {
+            if (!_textView.TextViewLines.Contains(line))
+            {
+                return;
+            }
+
+            if (_lines == null)
+            {
+                return;
+            }
+
+            var snapshot = _textView.TextSnapshot;
+            var snapshotLine = snapshot.GetLineFromPosition(line.Start.Position);
+
+            var lineNumber = snapshotLine.LineNumber;
+
+            var lineWrapper = _lines.FirstOrDefault(_ => _.CurrentLineNumber == lineNumber);
+            
+            if (lineWrapper != null)
+            {
+                DisposeItem(lineWrapper);
+            }
+
+            RefreshLines();
+        }
+
         public void LineUpdated(ITextViewLine line)
         {
+            if (!_textView.TextViewLines.Contains(line))
+            {
+                return;
+            }   
+
             if (_lines == null)
             {
                 return;
@@ -64,7 +96,7 @@ namespace HeatMarginExtension.View
             RefreshLines();
         }
 
-        void _disposeItem(LineWrapper wrapper)
+        public void DisposeItem(LineWrapper wrapper)
         {
             if (_viewModels.Contains(wrapper.ViewModel))
             {
@@ -163,7 +195,7 @@ namespace HeatMarginExtension.View
 
             foreach (var item in toRemove)
             {
-                _disposeItem(item);
+                DisposeItem(item);
             }
         }
 

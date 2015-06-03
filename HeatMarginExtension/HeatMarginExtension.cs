@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using HeatMarginExtension.View;
@@ -61,9 +62,17 @@ namespace HeatMarginExtension
 
             foreach (var item in e.Changes)
             {
-                var line = snapShot.GetLineFromPosition(item.NewPosition);
-                var actualLine = _textView.GetTextViewLineContainingBufferPosition(line.Start);
-                _viewModel.LineUpdated(actualLine);
+                var lineStart = snapShot.GetLineFromPosition(item.NewPosition);
+                var actualLineStart = _textView.GetTextViewLineContainingBufferPosition(lineStart.Start);
+                _viewModel.LineUpdated(actualLineStart);
+               
+                //Process lines in between start and end
+                for (var i = lineStart.LineNumber + 1; i <= lineStart.LineNumber + item.LineCountDelta; i++)
+                {
+                    var lineBetween = snapShot.GetLineFromLineNumber(i);
+                    var actualLineBetween = _textView.GetTextViewLineContainingBufferPosition(lineBetween.End);
+                    _viewModel.LineUpdated(actualLineBetween);
+                }
             }
         }
 
