@@ -71,9 +71,13 @@ namespace HeatMarginExtension.View
                 var pos = line.Line.Start.Position;
                 if (pos > position)
                 {
-                    
-
                     var newLineNumber = line.Line.LineNumber + newLines;
+
+                    while (newLineNumber >= snapshot.LineCount)
+                    {
+                        newLineNumber--;
+                    }
+
                     var snapshotLine = snapshot.GetLineFromLineNumber(newLineNumber);
 
                     line.CurrentLineNumber = newLineNumber;
@@ -268,7 +272,7 @@ namespace HeatMarginExtension.View
 
             if (idx < 20)
             {
-                var percent = Convert.ToDouble(_lines.IndexOf(line)) / Convert.ToDouble(_lines.Count);
+                var percent = Convert.ToDouble(_lines.IndexOf(line)) / Convert.ToDouble(_lines.Count > 20 ? 20 : _lines.Count);
                 return percent; 
             }
 

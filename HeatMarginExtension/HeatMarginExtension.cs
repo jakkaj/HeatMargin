@@ -71,7 +71,14 @@ namespace HeatMarginExtension
                 //Process lines in between start and end
                 for (var i = lineStart.LineNumber + 1; i <= lineStart.LineNumber + item.LineCountDelta; i++)
                 {
-                    var lineBetween = snapShot.GetLineFromLineNumber(i);
+                    var lineNumber = i;
+                    
+                    while (lineNumber >= snapShot.LineCount)
+                    {
+                        lineNumber--;
+                    }
+
+                    var lineBetween = snapShot.GetLineFromLineNumber(lineNumber);
                     var actualLineBetween = _textView.GetTextViewLineContainingBufferPosition(lineBetween.End);
                     _viewModel.LineUpdated(actualLineBetween);
                 }
