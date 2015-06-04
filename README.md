@@ -14,5 +14,7 @@ Works with VS15RC and 2013.
 
 With special thanks to https://github.com/laurentkempe/GitDiffMargin for getting me quickly up to speed with VS extensions!
 
+![Heat Margin Screeny](https://raw.githubusercontent.com/jakkaj/HeatMargin/master/Screenshots/VS2013_Screeny.jpg)
+
 
 If for some reason you cannot get it to launch with the debugger attached, try going to Project Settings -> Debug and setting Start external program to "C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\\devenv.exe" and command line arguments to "/rootSuffix Exp".
