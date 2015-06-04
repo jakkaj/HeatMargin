@@ -15,7 +15,7 @@
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="5" MinWidth="5" />
     </Grid.ColumnDefinitions>
-    <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding ColorBrush}">
+    <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="{Binding ColorBrush}" Opacity="{Binding Opacity}">
         
     </Border>
   </Grid>
