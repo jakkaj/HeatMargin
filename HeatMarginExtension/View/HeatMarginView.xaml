@@ -16,7 +16,7 @@
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="5" MinWidth="5" />
+            <ColumnDefinition Width="12" MinWidth="12" />
         </Grid.ColumnDefinitions>
         <ItemsControl Grid.Column="0"
                   HorizontalAlignment="Stretch"

@@ -24,15 +24,15 @@ namespace HeatMarginExtension.View
        
         void _doColor()
         {
-            var color = (Color)ColorConverter.ConvertFromString("#CC00CC");
+            var color = (Color)ColorConverter.ConvertFromString("#FF00FF");
             
             ColorBrush = new SolidColorBrush(color);
             
             Opacity = 1 - _age;
             
-            if (Opacity < .1)
+            if (Opacity < .2)
             {
-                Opacity = .1;
+                Opacity = .2;
             }
         }
 
