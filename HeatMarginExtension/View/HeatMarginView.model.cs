@@ -308,8 +308,8 @@ namespace HeatMarginExtension.View
 
             if (line == null) return;
 
-            var mapTop = _scrollBar.Map.GetCoordinateAtBufferPosition(line.Start) - 0.5;
-            var mapBottom = _scrollBar.Map.GetCoordinateAtBufferPosition(line.End) + 0.5;
+            var mapTop = _scrollBar.Map.GetCoordinateAtBufferPosition(line.Start) - 0.2;
+            var mapBottom = _scrollBar.Map.GetCoordinateAtBufferPosition(line.End) + 0.3;
 
 
             vm.Top = Math.Round(_scrollBar.GetYCoordinateOfScrollMapPosition(mapTop)) - 2.0;

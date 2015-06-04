@@ -29,7 +29,7 @@ namespace HeatMarginExtension.View
             ColorBrush = new SolidColorBrush(color);
             
             Opacity = 1 - _age;
-            
+
             if (Opacity < .2)
             {
                 Opacity = .2;
