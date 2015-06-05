@@ -115,7 +115,7 @@ namespace HeatMarginExtension.View
 
             var snapshot = _textView.TextSnapshot;
 
-            if (snapshot.LineCount < line.Start)
+            if (snapshot.Length < line.Start)
             {
                 return;
             }
