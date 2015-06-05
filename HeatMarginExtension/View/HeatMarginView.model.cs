@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows.Navigation;
 using System.Windows.Threading;
 using HeatMarginExtension.Infrastructure;
 using Microsoft.VisualStudio.Text;
@@ -42,10 +43,13 @@ namespace HeatMarginExtension.View
                 return;
             }
 
-            
-
             //move all items after this position back or forward depending on direction
             var snapshot = _textView.TextSnapshot;
+            
+            if (snapshot.Length < position)
+            {
+                return;
+            }
 
             var editedLine = snapshot.GetLineFromPosition(position);
             var editedLineNumber = editedLine.LineNumber;
@@ -96,34 +100,7 @@ namespace HeatMarginExtension.View
                 RefreshLines();
             }
         }
-
-        public void LineRemoved(ITextViewLine line)
-        {
-            if (!_textView.TextViewLines.Contains(line))
-            {
-                return;
-            }
-
-            if (_lines == null)
-            {
-                return;
-            }
-
-            var snapshot = _textView.TextSnapshot;
-            var snapshotLine = snapshot.GetLineFromPosition(line.Start.Position);
-
-            var lineNumber = snapshotLine.LineNumber;
-
-            var lineWrapper = _lines.FirstOrDefault(_ => _.CurrentLineNumber == lineNumber);
-            
-            if (lineWrapper != null)
-            {
-                DisposeItem(lineWrapper);
-            }
-
-            RefreshLines();
-        }
-
+       
         public void LineUpdated(ITextViewLine line)
         {
             if (!_textView.TextViewLines.Contains(line))
@@ -137,6 +114,12 @@ namespace HeatMarginExtension.View
             }
 
             var snapshot = _textView.TextSnapshot;
+
+            if (snapshot.LineCount < line.Start)
+            {
+                return;
+            }
+
             var snapshotLine = snapshot.GetLineFromPosition(line.Start.Position);
 
             var lineNumber = snapshotLine.LineNumber;
@@ -203,12 +186,17 @@ namespace HeatMarginExtension.View
 
         bool _syncCurrentLine(LineWrapper wrapper, ITextSnapshot snapshot)
         {
-            if (wrapper.CurrentLineNumber >= snapshot.LineCount)
-            {
-                return false;
-            }
+            ITextSnapshotLine lineSnapShot = null;
 
-            var lineSnapShot = snapshot.GetLineFromLineNumber(wrapper.Line.LineNumber);
+            if (wrapper.Line.LineNumber > snapshot.LineCount)
+            {
+                var myLengthFromEnd = wrapper.Line.Snapshot.LineCount - wrapper.Line.LineNumber;
+                lineSnapShot = snapshot.GetLineFromLineNumber(snapshot.Length - myLengthFromEnd);
+            }
+            else
+            {
+                lineSnapShot = snapshot.GetLineFromLineNumber(wrapper.CurrentLineNumber);
+            }
 
             wrapper.Line = lineSnapShot;
 

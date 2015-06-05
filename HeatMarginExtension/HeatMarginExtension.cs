@@ -64,6 +64,11 @@ namespace HeatMarginExtension
             {
                 _viewModel.LineDelta(item.NewPosition, item.LineCountDelta);
 
+                if (snapShot.Length < item.NewPosition)
+                {
+                    continue;
+                }
+
                 var lineStart = snapShot.GetLineFromPosition(item.NewPosition);
                 var actualLineStart = _textView.GetTextViewLineContainingBufferPosition(lineStart.Start);
                 _viewModel.LineUpdated(actualLineStart);
