@@ -58,6 +58,11 @@ namespace HeatMarginExtension
 
         void buffer_Changed(object sender, TextContentChangedEventArgs e)
         {
+            if (_textView.IsClosed)
+            {
+                return;
+            }
+            
             var snapShot = _textView.TextSnapshot;
 
             foreach (var item in e.Changes)

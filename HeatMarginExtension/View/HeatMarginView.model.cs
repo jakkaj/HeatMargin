@@ -103,6 +103,11 @@ namespace HeatMarginExtension.View
        
         public void LineUpdated(ITextViewLine line)
         {
+            if (_textView.IsClosed)
+            {
+                return;
+            }
+
             if (!_textView.TextViewLines.Contains(line))
             {
                 return;
@@ -207,6 +212,11 @@ namespace HeatMarginExtension.View
 
         public void RefreshLines()
         {
+            if (_textView.IsClosed)
+            {
+                return;
+            }
+
             var snapShot = _textView.TextSnapshot;
             
             var toRemove = new List<LineWrapper>();
