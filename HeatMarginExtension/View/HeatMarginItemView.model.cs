@@ -30,9 +30,9 @@ namespace HeatMarginExtension.View
             
             Opacity = 1 - _age;
 
-            if (Opacity < .2)
+            if (Opacity < .3)
             {
-                Opacity = .2;
+                Opacity = .3;
             }
         }
 

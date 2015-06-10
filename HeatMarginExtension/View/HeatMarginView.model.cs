@@ -268,9 +268,9 @@ namespace HeatMarginExtension.View
         {
             var idx = _lines.IndexOf(line);
 
-            if (idx < 20)
+            if (idx < 40)
             {
-                var percent = Convert.ToDouble(_lines.IndexOf(line)) / Convert.ToDouble(_lines.Count > 20 ? 20 : _lines.Count);
+                var percent = Convert.ToDouble(_lines.IndexOf(line)) / Convert.ToDouble(_lines.Count > 40 ? 40 : _lines.Count);
                 return percent; 
             }
 
